@@ -1,0 +1,11 @@
+Tests
+
+  >>> from pleiades.capgrids import data
+  >>> data['2']
+  ['2', 'Hibernia-Scandinavia', '5000', '-15.00', '30.00', '45.00', '65.00', 'a', 'I', '1', '4', '', '']
+  
+  >>> from pleiades.capgrids import box
+  >>> box('2', 'G1')
+  (15.0, 60.0, 20.0, 65.0)
+  >>> box('35', 'E2')
+  (12.0, 32.0, 13.0, 33.0)
