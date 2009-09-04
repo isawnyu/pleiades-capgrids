@@ -1,6 +1,11 @@
 import csv
 import os
 
+from zope.dublincore.interfaces import ICMFDublinCore
+from zope.interface import implements
+from zgeo.geographer.interfaces import IGeoreferenced
+
+
 alphanums = 'abcdefghijklmn'
 scales = {'5000': 5.0, '1000': 1.0, '500': 0.5, '150': 0.25}
 f = open(os.path.join(os.path.dirname(__file__), 'maps.csv'))
@@ -22,3 +27,40 @@ def box(mapid, gridsquare):
     minx = bbox[0] + i*dx
     maxy = bbox[3] - j*dy
     return (minx, maxy-dy, minx+dx, maxy)
+    
+
+class Grid(object):
+    
+    """Context for surfacing grid squares in KML, Atom, JSON
+    """
+    implements(ICMFDublinCore, IGeoreferenced)
+    
+    def __init__(self, mapid, gridsquare):
+        self.mapid = mapid
+        self.gridsquare = gridsquare
+    
+    @property
+    def id(self):
+        return 'http://atlantides.org/capgrids/%s/%s' % (self.mapid, self.gridsquare)
+        
+    @property
+    def bounds(self):
+        return box(self.mapid, self.gridsquare)
+    
+    def Title(self):
+        return 'Barrington Atlas map %s, grid square %s' % (self.mapid, self.gridsquare)
+        
+    def Description(self):
+        return 'Bounding polygon of Barrington Atlas map %s, grid square %s' % (self.mapid, self.gridsquare)
+        
+    def Creator(self):
+        return 'Classical Atlas Project, edited by R. Talbert'
+
+    @property
+    def type(self):
+        return 'Polygon'
+        
+    @property
+    def coordinates(self):
+        l, b, r, t = self.bounds
+        return (((l, b), (l, t), (r, t), (r, b), (l, b)),)
