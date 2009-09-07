@@ -1,0 +1,28 @@
+Test of the grid class
+
+  >>> from pleiades.capgrids import Grid
+  >>> grid = Grid('35', 'E2')
+  >>> grid.bounds
+  (12.0, 32.0, 13.0, 33.0)
+  >>> grid.id
+  'http://atlantides.org/capgrids/35/E2'
+  >>> grid.Title()
+  'Barrington Atlas map 35, grid square E2'
+  >>> grid.Description()
+  'Bounding polygon of Barrington Atlas map 35, grid square E2'
+  >>> grid.Creator()
+  'Classical Atlas Project, edited by R. Talbert'
+  
+Test adapters
+
+  >>> from zope.dublincore.interfaces import ICMFDublinCore
+  >>> dc = ICMFDublinCore(grid)
+  >>> dc.Title()
+  'Barrington Atlas map 35, grid square E2'
+  
+  >>> from zgeo.geographer.interfaces import IGeoreferenced
+  >>> geo = IGeoreferenced(grid)
+  >>> geo.type
+  'Polygon'
+  >>> geo.coordinates
+  (((12.0, 32.0), (12.0, 33.0), (13.0, 33.0), (13.0, 32.0), (12.0, 32.0)),)
