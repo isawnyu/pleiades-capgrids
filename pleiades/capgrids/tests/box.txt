@@ -2,10 +2,21 @@ Tests
 
   >>> from pleiades.capgrids import data
   >>> data['2']
-  ['2', 'Hibernia-Scandinavia', '5000', '-15.00', '30.00', '45.00', '65.00', 'a', 'I', '1', '4', '', '']
+  [['2', 'Hibernia-Scandinavia', '5000', '-15.00', '30.00', '45.00', '65.00', 'a', 'I', '1', '4', '', '']]
+  >>> data['87']
+  [['87', 'Cimmerius Bosphorus', '500', '35.00', '37.50', '44.50', '46.00', 'I', 'm', '1', '3', '', ''], ['87', 'Pontus-Phasis', '1000', '35.00', '43.00', '39.00', '44.00', 'a', 'h', '1', '5', '', '']]
   
   >>> from pleiades.capgrids import box
   >>> box('2', 'G1')
   (15.0, 60.0, 20.0, 65.0)
-  >>> box('35', 'E2')
-  (12.0, 32.0, 13.0, 33.0)
+  >>> box('2', 'G5')
+  Traceback (most recent call last):
+  ...
+  IndexError: No gridsquare G5 in map 2
+
+Map 87 has 2 pieces, with different scales
+
+  >>> box('87', 'A1')
+  (35.0, 43.0, 36.0, 44.0)
+  >>> box('87', 'I1')
+  (35.0, 45.5, 35.5, 46.0)
