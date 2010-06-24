@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.1 (2010-06-24)
+------------------
+- Add in missing map 1 record.
+ 
 0.1 - Unreleased
 ----------------
 
