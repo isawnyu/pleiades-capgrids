@@ -1,4 +1,5 @@
 "Map","Name","Scale","left","right","bottom","top","col1","col2","row1","row2","insets",
+1,"Internum Mare",5000,15.0,45.0,25.0,50.0,"a","l",1,5,,
 2,"Hibernia-Scandinavia",5000,-15.00,30.00,45.00,65.00,"a","I",1,4,,
 3,"Asia Occidentalis",5000,25.00,65.00,20.00,45.00,"a","h",1,5,,
 4,"Arabia-Azania",5000,35.00,60.00,-10.00,25.00,"a","e",1,7,,
