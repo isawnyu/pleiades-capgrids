@@ -6,13 +6,16 @@ from zope.dublincore.interfaces import ICMFDublinCore
 from zope.interface import implements
 from zgeo.geographer.interfaces import IGeoreferenced
 
+def mapcols(mapid):
+    # "i" and "o" are omitted from barrington atlas columns in maps 100-102
+    if int(mapid) >= 100:
+        return 'abcdefghjklmnpqrstuvwxyz'
+    else:
+        return 'abcdefghijklmnopqrstuvwxyz'
 
-alphanums = 'abcdefghijklmn'
-scales = {'5000': 5.0, '1000': 1.0, '500': 0.5, '150': 0.25}
+scales = {'10000': 5.0, '5000': 5.0, '1000': 1.0, '500': 0.5, '150': 0.25}
 f = open(os.path.join(os.path.dirname(__file__), 'maps.csv'))
 reader = csv.reader(f)
-
-# data = dict([(rec[0], rec[:]) for rec in list(r)[1:]])
 
 data = {}
 for r in islice(reader, 1, None):
@@ -22,6 +25,7 @@ for r in islice(reader, 1, None):
     data[key] = value
 
 def box(mapid, gridsquare):
+    alphanums = mapcols(mapid)
     row = int(gridsquare[1:])
     col = gridsquare[0].lower()
     for rec in data[mapid]:
@@ -50,6 +54,7 @@ class Map(object):
         self.id = rec[0]
         self.title = rec[1]
         self.scale = rec[2]
+        alphanums = mapcols(self.id)
         self.cols = [alphanums[i] for i in range(alphanums.index(rec[7].lower()), alphanums.index(rec[8].lower())+1)]
         self.rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
         self._keys = ['%s%s' % (i, j) for j in self.rows for i in self.cols]
