@@ -26,6 +26,9 @@ for r in islice(reader, 1, None):
 
 def box(mapid, gridsquare):
     alphanums = mapcols(mapid)
+    if gridsquare.lower() == "inset":
+        inset = data[mapid][0][-2]
+        return tuple(eval(inset))
     row = int(gridsquare[1:])
     col = gridsquare[0].lower()
     for rec in data[mapid]:
