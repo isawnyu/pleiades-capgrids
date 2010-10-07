@@ -8,7 +8,7 @@ from zgeo.geographer.interfaces import IGeoreferenced
 
 def mapcols(mapid):
     # "i" and "o" are omitted from barrington atlas columns in maps 100-102
-    if int(mapid) in (100, 101):
+    if int(mapid) in (100, 101, 102):
         return 'abcdefghjklmnpqrstuvwxyz'
     else:
         return 'abcdefghijklmnopqrstuvwxyz'
@@ -130,4 +130,3 @@ class Grid(object):
     @property
     def __geo_interface__(self):
         return dict(type=self.type, coordinates=self.coordinates)
-        
