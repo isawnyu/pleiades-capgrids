@@ -8,7 +8,7 @@ from zgeo.geographer.interfaces import IGeoreferenced
 
 def mapcols(mapid):
     # "i" and "o" are omitted from barrington atlas columns in maps 100-102
-    if int(mapid) >= 100:
+    if int(mapid) in (100, 101):
         return 'abcdefghjklmnpqrstuvwxyz'
     else:
         return 'abcdefghijklmnopqrstuvwxyz'
