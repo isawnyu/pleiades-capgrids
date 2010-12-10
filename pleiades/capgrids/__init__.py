@@ -24,21 +24,23 @@ for r in islice(reader, 1, None):
     value.append(r)
     data[key] = value
 
-def box(mapid, gridsquare):
+def box(mapid, gridsquare=None):
     alphanums = mapcols(mapid)
-    if gridsquare.lower() == "inset":
+    if gridsquare is not None and gridsquare.lower() == "inset":
         inset = data[mapid][0][-2]
         return tuple(eval(inset))
-    row = int(gridsquare[1:])
-    col = gridsquare[0].lower()
     for rec in data[mapid]:
         assert rec[0] == mapid
         try:
             cols = [alphanums[i] for i in range(alphanums.index(rec[7].lower()), alphanums.index(rec[8].lower())+1)]
             rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
+            bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
+            if gridsquare is None:
+                return bbox
+            row = int(gridsquare[1:])
+            col = gridsquare[0].lower()
             assert row in rows
             assert col in cols
-            bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
             dx = (bbox[2] - bbox[0])/len(cols)
             dy = (bbox[3] - bbox[1])/len(rows)
             minx = bbox[0] + cols.index(col)*dx
