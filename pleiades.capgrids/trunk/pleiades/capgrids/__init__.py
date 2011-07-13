@@ -32,9 +32,11 @@ def box(mapid, gridsquare=None):
     for rec in data[mapid]:
         assert rec[0] == mapid
         try:
+            bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
+            if gridsquare is None:
+                return bbox
             cols = [alphanums[i] for i in range(alphanums.index(rec[7].lower()), alphanums.index(rec[8].lower())+1)]
             rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
-            bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
             if gridsquare is None:
                 return bbox
             row = int(gridsquare[1:])
@@ -51,6 +53,17 @@ def box(mapid, gridsquare=None):
         except:
             raise
     raise IndexError, "No gridsquare %s in map %s" % (gridsquare, mapid)
+
+def parseURL(url):
+    assert url.startswith('http://atlantides.org/capgrids')
+    s = url.rstrip('/')
+    vals = s.split('/')[4:]
+    if len(vals) == 2:
+        return vals
+    elif len(vals) == 1:
+        return vals[0], None
+    else:
+        raise ValueError, "Invalid map or grid identifier"
 
 
 class Map(object):
@@ -97,18 +110,26 @@ class Grid(object):
     """
     implements(ICMFDublinCore, IGeoreferenced)
     
-    def __init__(self, mapid, gridsquare):
+    def __init__(self, mapid, gridsquare=None):
         self.mapid = mapid
-        self.gridsquare = gridsquare.lower()
+        self.gridsquare = None
+        if gridsquare:
+            self.gridsquare = gridsquare.lower()
 
     def __repr__(self):
         return 'Barrington Atlas map %s, grid square %s' % (
             self.mapid, self.gridsquare.upper())
+    
+    def _params(self):
+        if self.gridsquare:
+            return (self.mapid, self.gridsquare)
+        else:
+            return (self.mapid,)
 
     @property
     def id(self):
-        return 'http://atlantides.org/capgrids/%s/%s' % (
-            self.mapid, self.gridsquare)
+        params = self._params()
+        return "http://atlantides.org/capgrids/" + '/'.join(params)
     
     @property
     def bounds(self):
