@@ -37,8 +37,15 @@ Get a grid from a URL
   >>> Grid(*params).bounds
   (12.0, 32.0, 13.0, 33.0)
 
+Test the case of no grid
+
   >>> Grid(*parseURL("http://atlantides.org/capgrids/100")).bounds
   (-30.0, 20.0, 65.0, 55.0)
 
-  
+Test extended grids
+
+  >>> Grid(*parseURL("http://atlantides.org/capgrids/4/a1+e2")).bounds
+  (35.0, 15.0, 60.0, 25.0)
+
+
 
