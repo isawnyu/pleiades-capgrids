@@ -33,21 +33,30 @@ def box(mapid, gridsquare=None):
         assert rec[0] == mapid
         try:
             bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
-            if gridsquare is None:
-                return bbox
-            cols = [alphanums[i] for i in range(alphanums.index(rec[7].lower()), alphanums.index(rec[8].lower())+1)]
+            cols = [alphanums[i] for i in range(
+                alphanums.index(rec[7].lower()), 
+                alphanums.index(rec[8].lower())+1)]
             rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
             if gridsquare is None:
                 return bbox
-            row = int(gridsquare[1:])
-            col = gridsquare[0].lower()
-            assert row in rows
-            assert col in cols
-            dx = (bbox[2] - bbox[0])/len(cols)
-            dy = (bbox[3] - bbox[1])/len(rows)
-            minx = bbox[0] + cols.index(col)*dx
-            maxy = bbox[3] - rows.index(row)*dy
-            return (minx, maxy-dy, minx+dx, maxy)
+            a = []
+            b = []
+            c = []
+            d = []
+            for gs in gridsquare.split('+'):
+                row = int(gs[1:])
+                col = gs[0].lower()
+                assert row in rows
+                assert col in cols
+                dx = (bbox[2] - bbox[0])/len(cols)
+                dy = (bbox[3] - bbox[1])/len(rows)
+                minx = bbox[0] + cols.index(col)*dx
+                maxy = bbox[3] - rows.index(row)*dy
+                a.append(minx)
+                b.append(maxy-dy)
+                c.append(minx+dx)
+                d.append(maxy)
+            return (min(a), min(b), max(c), max(d))
         except AssertionError:
             pass
         except:
