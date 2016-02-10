@@ -22,7 +22,7 @@ Test adapters
   >>> dc.Description()
   'Footprint and attributes of Barrington Atlas map 35, grid square E2'
 
-  >>> from zgeo.geographer.interfaces import IGeoreferenced
+  >>> from collective.geo.geographer.interfaces import IGeoreferenced
   >>> geo = IGeoreferenced(grid)
   >>> geo.type
   'Polygon'

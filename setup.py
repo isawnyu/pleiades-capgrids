@@ -23,6 +23,7 @@ setup(name='pleiades.capgrids',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'collective.geo.geographer',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

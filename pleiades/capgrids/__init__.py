@@ -1,10 +1,10 @@
-import csv
+from collective.geo.geographer.interfaces import IGeoreferenced
 from itertools import islice
-import os
-
 from zope.dublincore.interfaces import ICMFDublinCore
 from zope.interface import implements
-from zgeo.geographer.interfaces import IGeoreferenced
+import csv
+import os
+
 
 def mapcols(mapid):
     # "i" and "o" are omitted from barrington atlas columns in maps 100-102
@@ -24,6 +24,7 @@ for r in islice(reader, 1, None):
     value.append(r)
     data[key] = value
 
+
 def box(mapid, gridsquare=None):
     alphanums = mapcols(mapid)
     if gridsquare is not None and gridsquare.lower() == "inset":
@@ -34,9 +35,9 @@ def box(mapid, gridsquare=None):
         try:
             bbox = float(rec[3]), float(rec[5]), float(rec[4]), float(rec[6])
             cols = [alphanums[i] for i in range(
-                alphanums.index(rec[7].lower()), 
-                alphanums.index(rec[8].lower())+1)]
-            rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
+                alphanums.index(rec[7].lower()),
+                alphanums.index(rec[8].lower()) + 1)]
+            rows = [k for k in range(int(rec[9]), int(rec[10]) + 1)]
             if gridsquare is None:
                 return bbox
             a = []
@@ -61,7 +62,8 @@ def box(mapid, gridsquare=None):
             pass
         except:
             raise
-    raise IndexError, "No gridsquare %s in map %s" % (gridsquare, mapid)
+    raise IndexError("No gridsquare %s in map %s" % (gridsquare, mapid))
+
 
 def parseURL(url):
     assert url.startswith('http://atlantides.org/capgrids')
@@ -72,7 +74,7 @@ def parseURL(url):
     elif len(vals) == 1:
         return vals[0], None
     else:
-        raise ValueError, "Invalid map or grid identifier"
+        raise ValueError("Invalid map or grid identifier")
 
 
 class Map(object):
@@ -86,7 +88,7 @@ class Map(object):
         self.rows = [k for k in range(int(rec[9]), int(rec[10])+1)]
         self._keys = ['%s%s' % (i, j) for j in self.rows for i in self.cols]
         self._items = dict([(k, Grid(self.id, k)) for k in self._keys])
-        
+
         # insets
         try:
             field = eval(rec[11])
@@ -96,9 +98,6 @@ class Map(object):
                 self.insets_bounds = [tuple(x) for x in field]
         except SyntaxError:
             self.insets_bounds = []
-        except:
-            import pdb; pdb.set_trace()
-            raise
 
     def keys(self):
         return self._keys
@@ -114,11 +113,10 @@ class Map(object):
 
 
 class Grid(object):
-    
     """Context for surfacing grid squares in KML, Atom, JSON
     """
     implements(ICMFDublinCore, IGeoreferenced)
-    
+
     def __init__(self, mapid, gridsquare=None):
         self.mapid = mapid
         self.gridsquare = None
@@ -128,7 +126,7 @@ class Grid(object):
     def __repr__(self):
         return 'Barrington Atlas map %s, grid square %s' % (
             self.mapid, self.gridsquare.upper())
-    
+
     def _params(self):
         if self.gridsquare:
             return (self.mapid, self.gridsquare)
@@ -139,29 +137,29 @@ class Grid(object):
     def id(self):
         params = self._params()
         return "http://atlantides.org/capgrids/" + '/'.join(params)
-    
+
     @property
     def bounds(self):
         return box(self.mapid, self.gridsquare)
-    
+
     def Title(self):
         return repr(self)
-    
+
     def Description(self):
         return 'Footprint and attributes of %s' % repr(self)
-    
+
     def Creator(self):
         return 'Classical Atlas Project, edited by R. Talbert'
-    
+
     @property
     def type(self):
         return 'Polygon'
-    
+
     @property
     def coordinates(self):
         l, b, r, t = self.bounds
         return (((l, b), (l, t), (r, t), (r, b), (l, b)),)
-    
+
     @property
     def __geo_interface__(self):
         return dict(type=self.type, coordinates=self.coordinates)
