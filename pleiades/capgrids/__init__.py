@@ -3,7 +3,10 @@ from itertools import islice
 from zope.dublincore.interfaces import ICMFDublinCore
 from zope.interface import implements
 import csv
+import logging
 import os
+
+log = logging.getLogger('pleiades.capgrids')
 
 
 def mapcols(mapid):
@@ -29,7 +32,10 @@ def box(mapid, gridsquare=None):
     alphanums = mapcols(mapid)
     if gridsquare is not None and gridsquare.lower() == "inset":
         inset = data[mapid][0][-2]
-        return tuple(eval(inset))
+        try:
+            return tuple(eval(inset))
+        except SyntaxError:
+            log.exception('Error parsing inset gridsquare: %s' % inset)
     for rec in data[mapid]:
         assert rec[0] == mapid
         try:
